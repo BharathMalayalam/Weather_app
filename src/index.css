@@ -1,0 +1,396 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Outfit:wght@300;400;500;600;700;800&display=swap');
+
+@import "tailwindcss";
+
+:root {
+  --font-sans: 'Outfit', 'Inter', sans-serif;
+
+  /* Layout tokens */
+  --sidebar-width: 360px;
+  --gap:           24px;
+  --gap-sm:        16px;
+  --radius-card:   24px;
+  --radius-lg:     28px;
+  --max-width:     1400px;
+}
+
+* {
+  box-sizing: border-box;
+  /* NOTE: margin/padding reset removed — Tailwind v4 preflight handles this.
+     Defining margin:0 here (after @import "tailwindcss") overrides space-y-* utilities. */
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  width: 100%;
+}
+
+body {
+  font-family: 'Outfit', 'Inter', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+  /* Align all content to the left-edge of viewport, capped at max-width */
+  min-height: 100vh;
+}
+
+/* ─────────────────────────────────────────
+   MAIN APP GRID  (2-column at xl)
+───────────────────────────────────────── */
+.app-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;                  /* column + row gap between main and sidebar */
+  align-items: start;
+}
+
+@media (min-width: 1280px) {
+  .app-grid {
+    grid-template-columns: 1fr var(--sidebar-width);
+    gap: var(--gap);          /* 24px gap at desktop */
+  }
+}
+
+/* ── Left main column: stack cards with 20px gap ── */
+.app-main {
+  min-width: 0;               /* prevents grid blowout */
+  display: flex;
+  flex-direction: column;
+  gap: 20px;                  /* 20px between each card */
+}
+
+/* ── Right sidebar: stack cards with 16px gap ── */
+.app-sidebar {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;                  /* 16px between each sidebar card */
+}
+
+@media (min-width: 1280px) {
+  .app-sidebar {
+    position: sticky;
+    top: 88px;
+    max-height: calc(100vh - 104px);
+    overflow-y: auto;
+    scrollbar-width: none;
+    width: var(--sidebar-width);
+  }
+  .app-sidebar::-webkit-scrollbar { display: none; }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.35);
+}
+
+/* Glassmorphism card */
+.glass {
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+}
+
+.glass-strong {
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(30px);
+  -webkit-backdrop-filter: blur(30px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
+}
+
+.glass-hover:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.25);
+  transform: translateY(-2px);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.3);
+}
+
+/* Animated background blobs */
+.blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.4;
+  animation: blobFloat 8s ease-in-out infinite;
+}
+
+.blob-1 {
+  width: 600px;
+  height: 600px;
+  top: -200px;
+  left: -150px;
+  animation-delay: 0s;
+}
+
+.blob-2 {
+  width: 500px;
+  height: 500px;
+  bottom: -100px;
+  right: -100px;
+  animation-delay: 3s;
+}
+
+.blob-3 {
+  width: 350px;
+  height: 350px;
+  top: 40%;
+  left: 50%;
+  transform: translateX(-50%);
+  animation-delay: 6s;
+}
+
+@keyframes blobFloat {
+
+  0%,
+  100% {
+    transform: translateY(0) scale(1);
+  }
+
+  33% {
+    transform: translateY(-30px) scale(1.05);
+  }
+
+  66% {
+    transform: translateY(20px) scale(0.95);
+  }
+}
+
+/* Pulse animation for weather icon */
+@keyframes weatherPulse {
+
+  0%,
+  100% {
+    transform: scale(1);
+    filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.3));
+  }
+
+  50% {
+    transform: scale(1.05);
+    filter: drop-shadow(0 0 40px rgba(255, 255, 255, 0.5));
+  }
+}
+
+.weather-icon-pulse {
+  animation: weatherPulse 3s ease-in-out infinite;
+}
+
+/* Shimmer loading animation */
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.shimmer {
+  background: linear-gradient(90deg,
+      rgba(255, 255, 255, 0.05) 25%,
+      rgba(255, 255, 255, 0.15) 50%,
+      rgba(255, 255, 255, 0.05) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+/* Fade in animation */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in-up {
+  animation: fadeInUp 0.5s ease-out forwards;
+}
+
+.fade-in-up-delay-1 {
+  animation-delay: 0.1s;
+  opacity: 0;
+}
+
+.fade-in-up-delay-2 {
+  animation-delay: 0.2s;
+  opacity: 0;
+}
+
+.fade-in-up-delay-3 {
+  animation-delay: 0.3s;
+  opacity: 0;
+}
+
+.fade-in-up-delay-4 {
+  animation-delay: 0.4s;
+  opacity: 0;
+}
+
+.fade-in-up-delay-5 {
+  animation-delay: 0.5s;
+  opacity: 0;
+}
+
+/* Spin animation for loading */
+@keyframes spin360 {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.spin-animation {
+  animation: spin360 1s linear infinite;
+}
+
+/* Progress bar animation */
+@keyframes progressFill {
+  from {
+    width: 0%;
+  }
+
+  to {
+    width: var(--progress);
+  }
+}
+
+.progress-fill {
+  animation: progressFill 1s ease-out forwards;
+  animation-delay: 0.5s;
+}
+
+/* Gradient text */
+.gradient-text {
+  background: linear-gradient(135deg, #fff 0%, rgba(255, 255, 255, 0.7) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Weather card transitions */
+.weather-card {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Search input focus */
+.search-input:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.3), 0 8px 32px rgba(0, 0, 0, 0.2);
+}
+
+/* Temperature display */
+.temp-display {
+  text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+/* Hourly scroll */
+.hourly-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+}
+
+/* Stat card active */
+.stat-card-active {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+/* Tab indicator */
+.tab-indicator {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Favorite star */
+@keyframes starPop {
+  0% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.4);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+.star-pop {
+  animation: starPop 0.3s ease-out;
+}
+
+/* Wind compass */
+@keyframes compassSpin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Rain drop animation */
+@keyframes rainDrop {
+  0% {
+    transform: translateY(-10px);
+    opacity: 0;
+  }
+
+  50% {
+    opacity: 1;
+  }
+
+  100% {
+    transform: translateY(10px);
+    opacity: 0;
+  }
+}
+
+.rain-drop {
+  animation: rainDrop 1s ease-in-out infinite;
+}
+
+/* Sun rays animation */
+@keyframes sunRays {
+
+  0%,
+  100% {
+    transform: rotate(0deg) scale(1);
+  }
+
+  50% {
+    transform: rotate(180deg) scale(1.1);
+  }
+}
+
+.sun-rays {
+  animation: sunRays 4s ease-in-out infinite;
+}
