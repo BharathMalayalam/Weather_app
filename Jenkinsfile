@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        IMAGE_NAME = "weather-app"
+        IMAGE_NAME = "bharathmalayalam/weather-app"
         CONTAINER_NAME = "weather-container"
     }
 
@@ -32,18 +32,23 @@ pipeline {
             }
         }
 
-        stage('Stop Old Container') {
+        stage('Push to Docker Hub') {
             steps {
                 sh '''
-                docker stop $CONTAINER_NAME || true
-                docker rm $CONTAINER_NAME || true
+                docker login -u yourusername -p yourpassword
+                docker push $IMAGE_NAME
                 '''
             }
         }
 
-        stage('Run New Container') {
+        stage('Deploy Container') {
             steps {
-                sh 'docker run -d -p 80:80 --name $CONTAINER_NAME $IMAGE_NAME'
+                sh '''
+                docker stop $CONTAINER_NAME || true
+                docker rm $CONTAINER_NAME || true
+                docker pull $IMAGE_NAME
+                docker run -d -p 80:80 --name $CONTAINER_NAME $IMAGE_NAME
+                '''
             }
         }
     }
